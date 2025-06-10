@@ -14,10 +14,9 @@ public class CompanyTest {
 
     @Before
     public void setUp() throws IOException {
-        // Create a temporary CSV file with test data
         tempCsv = Files.createTempFile("test_employees", ".csv");
         String csvContent = "id,firstName,lastName,salary,managerId\n" +
-                "1,Alice,Smith,100000,\n" +      // CEO
+                "1,Alice,Smith,100000,\n" +
                 "2,Bob,Johnson,80000,1\n" +
                 "3,Carol,Williams,70000,2\n" +
                 "4,David,Brown,60000,2\n";
@@ -36,13 +35,11 @@ public class CompanyTest {
 
     @Test
     public void testAnalyzeManagerSalaries() {
-        // Should not throw and should return a list (possibly empty)
-        assertNotNull(company.analyzeManagerSalaries());
+        assertNotNull(company.findManagerSalariesWithIssues());
     }
 
     @Test
     public void testFindLongReportingLines() {
-        // Should not throw and should return a list (possibly empty)
         assertNotNull(company.findLongReportingLines());
     }
 }

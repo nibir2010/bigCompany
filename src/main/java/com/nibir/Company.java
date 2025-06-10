@@ -9,11 +9,20 @@ import java.util.stream.Collectors;
 public class Company {
     private Map<Integer, Employee> employees;
     private Employee ceo;
+    private final int MAX_REPORTING_LINE = 4;
 
     public Company(String csvFile) throws IOException {
         this.employees = new HashMap<>();
         loadEmployees(csvFile);
         buildHierarchy();
+    }
+
+    public Map<Integer, Employee> getEmployees() {
+        return employees;
+    }
+
+    public Employee getCeo() {
+        return ceo;
     }
 
     private void loadEmployees(String csvFile) throws IOException {
@@ -48,7 +57,7 @@ public class Company {
         }
     }
 
-    public List<ManagerSalary> analyzeManagerSalaries() {
+    public List<ManagerSalary> findManagerSalariesWithIssues() {
         List<ManagerSalary> underpaidManagers = new ArrayList<>();
         List<ManagerSalary> overpaidManagers = new ArrayList<>();
 
@@ -60,15 +69,15 @@ public class Company {
                         .average()
                         .orElse(0.0);
 
-                double minSalary = avgSubordinateSalary * 1.2; // 20% more
-                double maxSalary = avgSubordinateSalary * 1.5; // 50% more
+                double minSalary = avgSubordinateSalary * 1.2;
+                double maxSalary = avgSubordinateSalary * 1.5;
 
                 if (employee.getSalary() < minSalary) {
-                    double deficit = minSalary - employee.getSalary();
-                    underpaidManagers.add(new ManagerSalary(employee, deficit, true));
+                    double lessSalary = minSalary - employee.getSalary();
+                    underpaidManagers.add(new ManagerSalary(employee, lessSalary, true));
                 } else if (employee.getSalary() > maxSalary) {
-                    double excess = employee.getSalary() - maxSalary;
-                    overpaidManagers.add(new ManagerSalary(employee, excess, false));
+                    double moreSalary = employee.getSalary() - maxSalary;
+                    overpaidManagers.add(new ManagerSalary(employee, moreSalary, false));
                 }
             }
         }
@@ -85,9 +94,9 @@ public class Company {
         for (Employee employee : employees.values()) {
             if (employee != ceo) {
                 int managerCount = countManagersToCEO(employee);
-                if (managerCount > 4) {
-                    int excessLevels = managerCount - 4;
-                    longReportingLines.add(new ReportingLine(employee, managerCount, excessLevels));
+                if (managerCount > MAX_REPORTING_LINE) {
+                    int extraLevels = managerCount - MAX_REPORTING_LINE;
+                    longReportingLines.add(new ReportingLine(employee, managerCount, extraLevels));
                 }
             }
         }
@@ -108,7 +117,7 @@ public class Company {
     }
 
     public void printReport() {
-        List<ManagerSalary> salaryIssues = analyzeManagerSalaries();
+        List<ManagerSalary> salaryIssues = findManagerSalariesWithIssues();
 
         List<ManagerSalary> underpaid = salaryIssues.stream()
                 .filter(ManagerSalary::isUnderpaid)
@@ -143,13 +152,5 @@ public class Company {
                         issue.getEmployee(), issue.getTotalLevels(), issue.getExcessLevels());
             }
         }
-    }
-
-    public Map<Integer, Employee> getEmployees() {
-        return employees;
-    }
-
-    public Employee getCeo() {
-        return ceo;
     }
 }

@@ -11,7 +11,15 @@ public class ManagerSalary {
         this.underpaid = underpaid;
     }
 
-    public Employee getManager() { return manager; }
-    public double getAmount() { return amount; }
-    public boolean isUnderpaid() { return underpaid; }
+    public Employee getManager() {
+        return manager;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public boolean isUnderpaid() {
+        return underpaid;
+    }
 }

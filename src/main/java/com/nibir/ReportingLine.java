@@ -11,7 +11,13 @@ public class ReportingLine {
         this.excessLevels = excessLevels;
     }
 
-    public Employee getEmployee() { return employee; }
-    public int getTotalLevels() { return totalLevels; }
-    public int getExcessLevels() { return excessLevels; }
+    public Employee getEmployee() {
+        return employee;
+    }
+    public int getTotalLevels() {
+        return totalLevels;
+    }
+    public int getExcessLevels() {
+        return excessLevels;
+    }
 }
